@@ -1,74 +1,111 @@
 
-# imports
-import pandas as pd
 import streamlit as st
-import os
-import importlib.util
+import pandas as pd
 
-st.set_page_config(page_title="Home", layout="wide")
-
-st.title("Statistics Project 1")
-
-# bibliotecas requeridas
-librerias_req = [
-    "pandas",
-    "streamlit",
-    "plotly",
-    "scipy",
-    "numpy",
-    "matplotlib"
-]
-
-st.subheader("Required libraries")
-
-# comprobar instalacion de bibliotecas
-for lib in librerias_req:
-    if importlib.util.find_spec(lib) is not None:
-        st.success(f"✅ **{lib}** is installed")
-    else:
-        st.error(f"❌ **{lib}** not found")
-        st.caption(f"Run: `pip install {lib}`")
-
-# boton para actualizar
-if st.button("Check again"):
-    st.rerun()
-
-st.subheader("Data upload (required to run the project)")
-
-# cargar archivo de temperaturas
-archivo_cargado = st.file_uploader(
-    "Upload the temperaturas.txt file",
-    type=["txt"]
+# configuracion de la pagina
+st.set_page_config(
+    page_title="MarketTech AI",
+    page_icon="💻",
+    layout="wide"
 )
 
-if archivo_cargado is not None:
-    df = pd.read_csv(
-        archivo_cargado,
-        sep=r"\s+",
-        encoding="utf-8"
+# encabezado
+st.title("💻 MarketTech AI")
+st.subheader("Análisis del mercado tecnológico")
+
+st.write(
+    "Plataforma de análisis de precios de componentes "
+    "informáticos y su relación con indicadores económicos "
+    "de Panamá y Estados Unidos."
+)
+
+st.divider()
+
+# navegacion
+seccion = st.sidebar.selectbox(
+    "Navegación",
+    [
+        "Inicio",
+        "Datos del mercado",
+        "Análisis de precios",
+        "Comparación de mercados",
+        "Indicadores económicos",
+        "Interpretación con IA"
+    ]
+)
+
+# pagina de inicio
+if seccion == "Inicio":
+    st.header("Bienvenido a MarketTech AI")
+
+    st.write(
+        "Explora información sobre el comportamiento "
+        "del mercado de componentes informáticos."
     )
-    st.session_state["datos_cargados"] = df
-    st.success("File uploaded and stored in memory.")
 
-st.subheader("Download technical report")
+    col1, col2 = st.columns(2)
 
-# ruta del informe PDF
-ruta_pdf = "resources/document.pdf"
+    with col1:
+        st.info("🇵🇦 **Mercado de Panamá**")
+        st.write("Consulta y analiza precios de tiendas panameñas.")
 
-# comprobar si existe el informe
-if os.path.exists(ruta_pdf):
-    with open(ruta_pdf, "rb") as archivo_pdf:
-        pdf_bytes = archivo_pdf.read()
+    with col2:
+        st.info("🇺🇸 **Mercado de Estados Unidos**")
+        st.write("Consulta y analiza precios del mercado estadounidense.")
 
-    st.download_button(
-        label="📄 Download Technical Report (PDF)",
-        data=pdf_bytes,
-        file_name="Technical_Report_Statistics.pdf",
-        mime="application/pdf",
-        help="Click to download the project's official document."
+    st.divider()
+
+    st.subheader("Categorías de componentes")
+
+    categorias = ["CPU", "GPU", "RAM", "SSD"]
+
+    columnas = st.columns(4)
+
+    for columna, categoria in zip(columnas, categorias):
+        with columna:
+            st.metric(label=categoria, value="Pendiente")
+
+    st.caption(
+        "Los indicadores se mostrarán cuando se conecten "
+        "los conjuntos de datos."
     )
-else:
-    st.error(
-        f"⚠️ PDF file not found at the specified path: "
-        f"`{ruta_pdf}`. Please verify the file is saved correctly."
+
+# datos del mercado
+elif seccion == "Datos del mercado":
+    st.header("Datos del mercado")
+    st.write(
+        "Aquí se consultarán los registros de precios "
+        "de componentes informáticos."
+    )
+
+# analisis de precios
+elif seccion == "Análisis de precios":
+    st.header("Análisis de precios")
+    st.write(
+        "Aquí se presentarán estadísticas y visualizaciones "
+        "del comportamiento de los precios."
+    )
+
+# comparacion de mercados
+elif seccion == "Comparación de mercados":
+    st.header("Comparación de mercados")
+    st.write(
+        "Aquí se compararán los precios de Panamá "
+        "y Estados Unidos."
+    )
+
+# indicadores economicos
+elif seccion == "Indicadores económicos":
+    st.header("Indicadores económicos")
+    st.write(
+        "Aquí se analizarán indicadores económicos "
+        "y su relación con los precios tecnológicos."
+    )
+
+# interpretacion con ia
+elif seccion == "Interpretación con IA":
+    st.header("Interpretación con inteligencia artificial")
+    st.write(
+        "Aquí se integrará Gemini para interpretar "
+        "los resultados obtenidos mediante el análisis de datos."
     )
